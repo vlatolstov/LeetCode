@@ -54,9 +54,8 @@ class Program
                 {
                     Insert(nums1, i, nums2[j]);
                     insertions++;
-                    i += 2;
+                    i++;
                     j++;
-                    step++;
                 }
                 else if (step >= m)
                 {
@@ -75,18 +74,6 @@ class Program
         }
 
         int[] Insert(int[] arr, int atIndex, int insert)
-        {
-            if (atIndex > arr.Length - 1) atIndex = arr.Length - 1;
-            for (int i = arr.Length - 1; i > atIndex; i--)
-            {
-                arr[i] = arr[i - 1];
-            }
-            arr[atIndex] = insert;
-            return arr;
-        }
-    }
-
-    int[] Insert(int[] arr, int atIndex, int insert)
         {
             if (atIndex > arr.Length - 1) atIndex = arr.Length - 1;
             for (int i = arr.Length - 1; i > atIndex; i--)
