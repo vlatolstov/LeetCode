@@ -9,28 +9,32 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-
         Console.WriteLine(sol.RemoveKdigits("1432219", 3));
+        Console.WriteLine(sol.RemoveKdigits("10200", 1));
+        Console.WriteLine(sol.RemoveKdigits("10", 2));
     }
 
     public class Solution
     {
         public string RemoveKdigits(string num, int k)
         {
-
             int min = int.Parse(num);
-
-            for (int i = 0; i <= num.Length - k; i++)
+            for (int j = 0; j < k; j++)
             {
-                List<char> temp = num.ToCharArray().ToList();
-                for (int j = i; j < i + k; j++)
+                StringBuilder sb = new(min.ToString());
+                for (int i = 0; i < sb.Length; i++)
                 {
-                    temp.RemoveAt(j);
+                    var temp = sb[i];
+                    sb.Remove(i, 1);
+                    int curr = 0;
+                    if (int.TryParse(sb.ToString(), out int result))
+                    {
+                        curr = result;
+                    }
+                    if (curr < min) min = curr;
+                    sb.Insert(i, temp);
                 }
-                var curr = int.Parse(new string(temp));
-                if (curr < min) min = curr;
             }
-
             return min.ToString();
         }
     }
