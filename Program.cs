@@ -21,11 +21,18 @@ class Program
         {
             int drops = 0;
 
-            //finding the val and ind of max height
-            List<int> list = new(height);
-            int max = list.Max(); 
-            int maxI = list.FindIndex(i => i == max);
-            
+            //findin the index of max val
+            int maxI = 0;
+            int maxVal = 0;
+            for (int k = 0; k < height.Length; k++)
+            {
+                if (height[k] > maxVal)
+                {
+                    maxVal = height[k];
+                    maxI = k;
+                } 
+            }
+
             //lower bound between this and max
             int bound = 0;
 
@@ -50,7 +57,4 @@ class Program
             return drops;
         }
     }
-
-
-
 }
