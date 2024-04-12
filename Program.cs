@@ -19,36 +19,35 @@ class Program
     {
         public int Trap(int[] height)
         {
-            int traped = 0;
-            for (int i = 0; i < height.Length; i++)
-            {
-                traped += SpotCheck(height, i);
-            }
-            return traped;
-        }
+            int drops = 0;
 
-        int SpotCheck(int[] arr, int i)
-        {
-            int leftI = i;
-            int leftH = 0;
-            int rightI = i;
-            int rightH = 0;
-            int spot = arr[i];
+            //finding the val and ind of max height
+            List<int> list = new(height);
+            int max = list.Max(); 
+            int maxI = list.FindIndex(i => i == max);
+            
+            //lower bound between this and max
+            int bound = 0;
 
-            if (i == 0 || i == arr.Length - 1) return 0;
-            while (leftI != 0)
+            //from start 
+            int i = 0;
+            while (i != maxI)
             {
-                leftI--;
-                if (arr[leftI] > leftH && arr[leftI] > spot) leftH = arr[leftI];
+                if (height[i] < bound) drops += bound - height[i];
+                if (height[i] > bound) bound = height[i];
+                i++;
             }
-            while (rightI != arr.Length - 1)
+
+            //from end
+            i = height.Length - 1;
+            bound = 0;
+            while (i > maxI)
             {
-                rightI++;
-                if (arr[rightI] > rightH && arr[rightI] > spot) rightH = arr[rightI];
+                if (height[i] < bound) drops += bound - height[i];
+                if (height[i] > bound) bound = height[i];
+                i--;
             }
-            if (leftH <= spot || rightH <= spot) return 0;
-            var height = leftH > rightH ? rightH : leftH;
-            return height - spot;
+            return drops;
         }
     }
 
