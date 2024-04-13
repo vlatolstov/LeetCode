@@ -11,7 +11,10 @@ class Program
         var sol = new Solution();
         var matrix = new char[][] { new char[] { '1', '0', '1', '0', '0' }, new char[] { '1', '0', '1', '1', '1' }, new char[] { '1', '1', '1', '1', '1' }, new char[] { '1', '0', '0', '1', '0' } };
         Console.WriteLine(sol.MaximalRectangle(matrix));
-
+        var matrix2 = new char[][] { new char[] { '1', '0', '1', '1', '1' }, new char[] { '0', '1', '0', '1', '0' }, new char[] { '1', '1', '0', '1', '1' }, new char[] { '1', '1', '0', '1', '1' }, new char[] { '0', '1', '1', '1', '1' } };
+        Console.WriteLine(sol.MaximalRectangle(matrix2));
+        var matrix3 = new char[][] { new char[] { '1', '1', '1', '1', '1', '1', '1', '1' }, new char[] { '1', '1', '1', '1', '1', '1', '1', '0' }, new char[] { '1', '1', '1', '1', '1', '1', '1', '0' }, new char[] { '1', '1', '1', '1', '1', '0', '0', '0' }, new char[] { '0', '1', '1', '1', '1', '0', '0', '0' } };
+        Console.WriteLine(sol.MaximalRectangle(matrix3));
     }
 
 
@@ -40,9 +43,9 @@ class Program
                         while (x < matrix.Length && matrix[x][j] == '1')
                         {
                             bool sameLenght = true;
-                            for (int k = j; k < lenght; k++)
+                            for (int k = 1; k < lenght; k++)
                             {
-                                if (matrix[x][k] != '1')
+                                if (matrix[x][j + k] != '1')
                                 {
                                     sameLenght = false;
                                 }
