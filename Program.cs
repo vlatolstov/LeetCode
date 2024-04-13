@@ -32,6 +32,7 @@ class Program
                         int lenght = 1;
                         int width = 1;
                         int x = i + 1;
+                        int xx = i - 1;
                         int y = j + 1;
 
                         while (y < matrix[i].Length && matrix[i][y] == '1')
@@ -57,6 +58,25 @@ class Program
                                 x++;
                             }
                         }
+
+                        while (xx >= 0 && matrix[xx][j] == '1')
+                        {
+                            bool sameLenght = true;
+                            for (int k = 1; k < lenght; k++)
+                            {
+                                if (matrix[xx][j + k] != '1')
+                                {
+                                    sameLenght = false;
+                                }
+                            }
+                            if (!sameLenght) break;
+                            else
+                            {
+                                width++;
+                                xx--;
+                            }
+                        }
+
                         int currSqr = lenght * width;
                         if (currSqr > maxSqr) maxSqr = currSqr;
                     }
