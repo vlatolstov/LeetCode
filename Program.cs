@@ -17,73 +17,62 @@ class Program
         Console.WriteLine(sol.MaximalRectangle(matrix3));
     }
 
+}
 
-    public class Solution
+class Solution
+{
+    public int MaximalRectangle(char[][] matrix)
     {
-        public int MaximalRectangle(char[][] matrix)
+        if (matrix == null || matrix.Length == 0 || matrix[0].Length == 0)
         {
-            int maxSqr = 0;
-            for (int i = 0; i < matrix.Length; i++)
+            return 0;
+        }
+
+        int numRows = matrix.Length;
+        int numCols = matrix[0].Length;
+
+        int maxArea = 0;
+        int[] height = new int[numCols];
+
+        for (int row = 0; row < numRows; row++)
+        {
+            for (int col = 0; col < numCols; col++)
             {
-                for (int j = 0; j < matrix[i].Length; j++)
+                if (matrix[row][col] == '1')
                 {
-                    if (matrix[i][j] == '1')
-                    {
-                        int lenght = 1;
-                        int width = 1;
-                        int x = i + 1;
-                        int xx = i - 1;
-                        int y = j + 1;
-
-                        while (y < matrix[i].Length && matrix[i][y] == '1')
-                        {
-                            lenght++;
-                            y++;
-                        }
-
-                        while (x < matrix.Length && matrix[x][j] == '1')
-                        {
-                            bool sameLenght = true;
-                            for (int k = 1; k < lenght; k++)
-                            {
-                                if (matrix[x][j + k] != '1')
-                                {
-                                    sameLenght = false;
-                                }
-                            }
-                            if (!sameLenght) break;
-                            else
-                            {
-                                width++;
-                                x++;
-                            }
-                        }
-
-                        while (xx >= 0 && matrix[xx][j] == '1')
-                        {
-                            bool sameLenght = true;
-                            for (int k = 1; k < lenght; k++)
-                            {
-                                if (matrix[xx][j + k] != '1')
-                                {
-                                    sameLenght = false;
-                                }
-                            }
-                            if (!sameLenght) break;
-                            else
-                            {
-                                width++;
-                                xx--;
-                            }
-                        }
-
-                        int currSqr = lenght * width;
-                        if (currSqr > maxSqr) maxSqr = currSqr;
-                    }
+                    height[col]++;
+                }
+                else
+                {
+                    height[col] = 0;
                 }
             }
-            return maxSqr;
+
+            int area = LargestRectangleArea(height);
+            maxArea = Math.Max(maxArea, area);
         }
+
+        return maxArea;
+    }
+    private int LargestRectangleArea(int[] heights)
+    {
+        Stack<int> stack = new Stack<int>();
+        int maxArea = 0;
+        int n = heights.Length;
+
+        for (int i = 0; i <= n; i++) 
+        {
+            while (stack.Count > 0 && (i == n || heights[stack.Peek()] >= heights[i]))
+            {
+                int h = heights[stack.Pop()];
+                int w = stack.Count == 0 ? i : i - stack.Peek() - 1;
+                maxArea = Math.Max(maxArea, h * w);
+            }
+
+            stack.Push(i); 
+        }
+
+        return maxArea;
     }
 }
 
