@@ -9,9 +9,9 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-        TreeNode root = new TreeNode(1);
-        root.left = new TreeNode(2);
-        root.right = new TreeNode(3);
+        TreeNode root = new TreeNode(0);
+        root.left = new TreeNode(1);
+
         Console.WriteLine(sol.SumNumbers(root));
 
         TreeNode root2 = new TreeNode(4);
@@ -28,35 +28,31 @@ class Program
         public int SumNumbers(TreeNode root)
         {
             int sum = 0;
+            int num;
+            Stack<(TreeNode, int)> stack = new();
+            stack.Push((root, 0));
 
-            var digits = SeqOfDigits(root, new List<int>(), 0);
-            foreach (var d in digits)
+            while (stack.Count > 0)
             {
-                sum += d;
+                var top = stack.Pop();
+                root = top.Item1;
+                num = top.Item2;
+
+                if (root != null)
+                {
+                    num = (num * 10) + root.val;
+                    if (root.left == null && root.right == null)
+                    {
+                        sum += num;
+                    }
+                    else
+                    {
+                        stack.Push((root.left, num));
+                        stack.Push((root.right, num));
+                    }
+                }
             }
             return sum;
-        }
-
-        List<int> SeqOfDigits(TreeNode root, List<int> digits, int curr)
-        {
-            curr = (curr * 10) + root.val;
-            switch (root.left == null, root.right == null)
-            {
-                case (true, true):
-                    digits.Add(curr);
-                    break;
-                case (false, true):
-                    SeqOfDigits(root.left, digits, curr);
-                    break;
-                case (true, false):
-                    SeqOfDigits(root.right, digits, curr);
-                    break;
-                case (false, false):
-                    SeqOfDigits(root.left, digits, curr);
-                    SeqOfDigits(root.right, digits, curr);
-                    break;
-            }
-            return digits;
         }
     }
 
