@@ -9,14 +9,59 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        Console.WriteLine(sol.SumNumbers(root));
 
-
+        TreeNode root2 = new TreeNode(4);
+        root2.left = new TreeNode(9);
+        root2.right = new TreeNode(0);
+        root2.left.left = new TreeNode(5);
+        root2.left.right = new TreeNode(1);
+        Console.WriteLine(sol.SumNumbers(root2));
 
     }
 
     public class Solution
     {
+        public int SumNumbers(TreeNode root)
+        {
+            int sum = 0;
+            var sb = SeqOfDigits(root, new StringBuilder());
+            string[] digits = sb.ToString().Split('-');
+            foreach (var d in digits)
+            {
+                if (int.TryParse(d, out int i)) sum += i;
+            }
+            return sum;
+        }
 
+        StringBuilder SeqOfDigits(TreeNode root, StringBuilder sb)
+        {
+            StringBuilder tracker = new(sb.ToString());
+            switch (root.left == null, root.right == null)
+            {
+                case (true, true):
+                    sb.Append(root.val);
+                    sb.Append('-');
+                    break;
+                case (false, true):
+                    sb.Append(root.val);
+                    SeqOfDigits(root.left, sb);
+                    break;
+                case (true, false):
+                    sb.Append(root.val);
+                    SeqOfDigits(root.right, sb);
+                    break;
+                case (false, false):
+                    sb.Append(root.val);
+                    SeqOfDigits(root.left, sb);
+                    SeqOfDigits(root.right, sb);
+                    break;
+            }
+            return sb.Append(tracker);
+        }
     }
 
 
