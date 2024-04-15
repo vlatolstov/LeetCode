@@ -16,10 +16,36 @@ class Program
 
     public class Solution
     {
-
+        public string FindLatestTime(string s)
+        {
+            StringBuilder sb = new();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '?')
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            if (s[i + 1] <= '1' || s[i + 1] == '?') sb.Append('1');
+                            else sb.Append('0');
+                            break;
+                        case 1:
+                            if (sb[0] == '0') sb.Append('9');
+                            else sb.Append('1');
+                            break;
+                        case 3:
+                            sb.Append('5');
+                            break;
+                        case 4:
+                            sb.Append('9');
+                            break;
+                    }
+                }
+                else sb.Append(s[i]);
+            }
+            return sb.ToString();
+        }
     }
-
-
 
 }
 public class TreeNode
