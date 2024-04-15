@@ -28,7 +28,8 @@ class Program
         public int SumNumbers(TreeNode root)
         {
             int sum = 0;
-            var sb = SeqOfDigits(root, new StringBuilder());
+            var sb = new StringBuilder();
+            SeqOfDigits(root, sb, new StringBuilder());
             string[] digits = sb.ToString().Split('-');
             foreach (var d in digits)
             {
@@ -37,30 +38,31 @@ class Program
             return sum;
         }
 
-        StringBuilder SeqOfDigits(TreeNode root, StringBuilder sb)
+        StringBuilder SeqOfDigits(TreeNode root, StringBuilder all, StringBuilder curr)
         {
-            StringBuilder tracker = new(sb.ToString());
             switch (root.left == null, root.right == null)
             {
                 case (true, true):
-                    sb.Append(root.val);
-                    sb.Append('-');
+                    curr.Append(root.val);
+                    curr.Append('-');
+                    all.Append(curr);
+                    curr.Remove(curr.Length - 2, 2);
                     break;
                 case (false, true):
-                    sb.Append(root.val);
-                    SeqOfDigits(root.left, sb);
+                    curr.Append(root.val);
+                    SeqOfDigits(root.left, all, curr);
                     break;
                 case (true, false):
-                    sb.Append(root.val);
-                    SeqOfDigits(root.right, sb);
+                    curr.Append(root.val);
+                    SeqOfDigits(root.right, all, curr);
                     break;
                 case (false, false):
-                    sb.Append(root.val);
-                    SeqOfDigits(root.left, sb);
-                    SeqOfDigits(root.right, sb);
+                    curr.Append(root.val);
+                    SeqOfDigits(root.left, all, curr);
+                    SeqOfDigits(root.right, all, curr);
                     break;
             }
-            return sb.Append(tracker);
+            return curr;
         }
     }
 
