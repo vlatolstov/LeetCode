@@ -28,41 +28,35 @@ class Program
         public int SumNumbers(TreeNode root)
         {
             int sum = 0;
-            var sb = new StringBuilder();
-            SeqOfDigits(root, sb, new StringBuilder());
-            string[] digits = sb.ToString().Split('-');
+
+            var digits = SeqOfDigits(root, new List<int>(), 0);
             foreach (var d in digits)
             {
-                if (int.TryParse(d, out int i)) sum += i;
+                sum += d;
             }
             return sum;
         }
 
-        StringBuilder SeqOfDigits(TreeNode root, StringBuilder all, StringBuilder curr)
+        List<int> SeqOfDigits(TreeNode root, List<int> digits, int curr)
         {
+            curr = (curr * 10) + root.val;
             switch (root.left == null, root.right == null)
             {
                 case (true, true):
-                    curr.Append(root.val);
-                    curr.Append('-');
-                    all.Append(curr);
-                    curr.Remove(curr.Length - 2, 2);
+                    digits.Add(curr);
                     break;
                 case (false, true):
-                    curr.Append(root.val);
-                    SeqOfDigits(root.left, all, curr);
+                    SeqOfDigits(root.left, digits, curr);
                     break;
                 case (true, false):
-                    curr.Append(root.val);
-                    SeqOfDigits(root.right, all, curr);
+                    SeqOfDigits(root.right, digits, curr);
                     break;
                 case (false, false):
-                    curr.Append(root.val);
-                    SeqOfDigits(root.left, all, curr);
-                    SeqOfDigits(root.right, all, curr);
+                    SeqOfDigits(root.left, digits, curr);
+                    SeqOfDigits(root.right, digits, curr);
                     break;
             }
-            return curr;
+            return digits;
         }
     }
 
