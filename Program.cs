@@ -16,7 +16,19 @@ class Program
 
     public class Solution
     {
+        public TreeNode AddOneRow(TreeNode root, int val, int depth)
+        {
+            Stack<TreeNode> stack = new();
+            stack.Push(root);
+            for (int i = 0; i < depth - 1; i++)
+            {
+                foreach(var node in stack)
+                {
 
+                }
+            }
+
+        }
     }
 
 
