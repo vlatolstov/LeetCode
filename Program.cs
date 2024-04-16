@@ -10,6 +10,7 @@ class Program
     {
         var sol = new Solution();
 
+        sol.AddOneRow(TreeNode.CreateTree(new int[] { 4, 2, 6, 3, 1, 5 }), 1, 1);
 
 
     }
@@ -18,16 +19,42 @@ class Program
     {
         public TreeNode AddOneRow(TreeNode root, int val, int depth)
         {
-            Stack<TreeNode> stack = new();
-            stack.Push(root);
-            for (int i = 0; i < depth - 1; i++)
+            AddingToTheDepth(root, val, depth - 1);
+            return root;
+        }
+        TreeNode AddingToTheDepth(TreeNode node, int val, int depth)
+        {
+            int curDepth = depth - 1;
+            if (curDepth == 0)
             {
-                foreach(var node in stack)
+                var leftTemp = node.left;
+                var rightTemp = node.right;
+                node.left = new TreeNode(val, leftTemp);
+                node.right = new TreeNode(val, null, rightTemp);
+            }
+            else if (curDepth < 0)
+            {
+                return new TreeNode(val, node);
+            }
+            else
+            {
+                switch (node.left == null, node.right == null)
                 {
-
+                    case (true, true):
+                        break;
+                    case (false, true):
+                        AddingToTheDepth(node.left, val, curDepth);
+                        break;
+                    case (true, false):
+                        AddingToTheDepth(node.right, val, curDepth);
+                        break;
+                    case (false, false):
+                        AddingToTheDepth(node.left, val, curDepth);
+                        AddingToTheDepth(node.right, val, curDepth);
+                        break;
                 }
             }
-
+            return node;
         }
     }
 
@@ -45,6 +72,19 @@ public class TreeNode
         this.left = left;
         this.right = right;
     }
+
+    public static TreeNode CreateTree(int[] values, int index = 0)
+    {
+        if (index >= values.Length || values[index] == null)
+        {
+            return null;
+        }
+
+        TreeNode node = new TreeNode(values[index]);
+        node.left = CreateTree(values, 2 * index + 1);
+        node.right = CreateTree(values, 2 * index + 2);
+        return node;
+    }
 }
 public class ListNode
 {
@@ -56,4 +96,5 @@ public class ListNode
         this.next = next;
     }
 }
+
 
