@@ -22,61 +22,25 @@ class Program
         {
             int f = 0;
             int s = 0;
-            int midInd;
+            int[] sum = new int[nums1.Length + nums2.Length];
+            int midIndex = sum.Length / 2;
 
-            switch (nums1.Length > 0, nums2.Length > 0)
+            for (int i = 0; i < sum.Length; i++)
             {
-                case (false, false):
-                    return 0d;
-                case (false, true):
-                    midInd = nums2.Length / 2;
-                    if (nums2.Length % 2 == 0) return nums2[midInd];
-                    else return ((double)(nums2[midInd] + nums2[midInd + 1])) / 2;
-                case (true, false):
-                    midInd = nums1.Length / 2;
-                    if (nums1.Length % 2 == 0) return nums1[midInd];
-                    else return ((double)(nums1[midInd] + nums1[midInd + 1])) / 2;
-                case (true, true):
-                    int sumLength = nums1.Length + nums2.Length;
-                    for (int i = 0; i < (sumLength / 2); i++)
-                    {
-                        switch (f < nums1.Length, s < nums2.Length)
-                        {
-                            case (true, true):
-                                if (nums1[f] >= nums2[s]) s++;
-                                else f++;
-                                break;
-                            case (false, true):
-                                s++;
-                                break;
-                            case (true, false):
-                                f++;
-                                break;
-                            default:
-                                throw new Exception("wat");
-                        };
-                    }
-                    if (f >= nums1.Length)
-                    {
-                        return sumLength % 2 == 0 ? ((double)(nums2[s] + nums2[s + 1])) / 2 : (double)nums2[s];
-                    }
-                    if (s >= nums2.Length)
-                    {
-                        return sumLength % 2 == 0 ? ((double)(nums1[f] + nums1[f + 1])) / 2 : (double)nums1[f];
-                    }
-                    else
-                    {
-                        if (sumLength % 2 == 0)
-                        {
-                            return ((double)(nums1[f] + nums2[s])) / 2;
-                        }
-                        else
-                        {
-                            return f > s == true ? nums2[s] : nums1[f];
-                        }
-                    }
-
+                sum[i] = (f < nums1.Length, s < nums2.Length) switch
+                {
+                    (true, true) => nums1[f] > nums2[s] == true ? nums2[s++] : nums1[f++],
+                    (false, true) => nums2[s++],
+                    (true, false) => nums1[f++],
+                    _ => 0
+                };
             }
+
+            if (sum.Length % 2 == 0)
+            {
+                return (double)(sum[midIndex] + sum[midIndex - 1]) / 2;
+            }
+            else return (double)sum[midIndex];
         }
     }
 
