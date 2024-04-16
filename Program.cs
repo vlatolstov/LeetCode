@@ -19,8 +19,7 @@ class Program
     {
         public TreeNode AddOneRow(TreeNode root, int val, int depth)
         {
-            AddingToTheDepth(root, val, depth - 1);
-            return root;
+            return AddingToTheDepth(root, val, depth - 1);
         }
         TreeNode AddingToTheDepth(TreeNode node, int val, int depth)
         {
