@@ -11,6 +11,7 @@ class Program
         var sol = new Solution();
         var tree = TreeNode.CreateTree(new int[] { 0, 1, 2, 3, 4, 3, 4 });
         Console.WriteLine(sol.SmallestFromLeaf(tree));
+        Console.WriteLine(sol.SmallestFromLeaf(new TreeNode(0, null, new TreeNode(1))));
     }
 
     public class Solution
@@ -29,7 +30,7 @@ class Program
             char currentChar = (char)(node.val + 97);
             current = currentChar + current;
 
-            if (node.left == null || node.right == null)
+            if (node.left == null && node.right == null)
             {
                 SmallestCheck(current);
             }
