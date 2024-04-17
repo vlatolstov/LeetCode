@@ -34,13 +34,13 @@ class Program
         }
         Console.WriteLine("--------------------------------");
 
-        //string x = "1,2,3,4,5";
-        //var nums = x.Split(',');
-
-        //Array.ConvertAll<string, int>(nums, new Converter<string, int>(StringToInt));
-
-
-
+        var tree4 = TreeNode.CreateTree(new int?[0]);
+        foreach (var list in sol.PathSum(tree4, 1))
+        {
+            foreach (int num in list) Console.Write(num + ",");
+            Console.WriteLine();
+        }
+        Console.WriteLine("--------------------------------");
 
     }
 
@@ -49,32 +49,34 @@ class Program
         public IList<IList<int>> PathSum(TreeNode root, int targetSum)
         {
             List<IList<int>> result = new();
-            DFS(root, "");
+            List<int> path = new();
+            if (root == null) return result;
+            else path.Add(root.val);
+            DFS(root, root.val);
             return result;
 
-            void DFS(TreeNode node, string currPath, int currSum = 0)
+
+
+            void DFS(TreeNode node, int currSum)
             {
-                if (node == null) return;
-                currPath += node.val.ToString();
-                currSum += node.val;
-
-                if (node.left == null && node.right == null)
+                if (node.left == null && node.right == null && currSum == targetSum)
                 {
-                    if (currSum == targetSum)
-                    {
-                        result.Add(
-                            new List<int>(
-                                Array.ConvertAll<string, int>(
-                                currPath.Split(','), new Converter<string, int>(StringToInt))));
-                    }
+                    List<int> temp = new();
+                    temp.AddRange(path);
+                    result.Add(temp);
                 }
-                currPath += ',';
-                DFS(node.left, currPath, currSum);
-                DFS(node.right, currPath, currSum);
 
-                int StringToInt(string str)
+                if (node.left != null)
                 {
-                    return int.Parse(str);
+                    path.Add(node.left.val);
+                    DFS(node.left, currSum + node.left.val);
+                    path.RemoveAt(path.Count - 1);
+                }
+                if (node.right != null)
+                {
+                    path.Add(node.right.val);
+                    DFS(node.right, currSum + node.right.val);
+                    path.RemoveAt(path.Count - 1);
                 }
             }
         }
