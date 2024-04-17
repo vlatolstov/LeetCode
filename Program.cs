@@ -16,7 +16,10 @@ class Program
 
     public class Solution
     {
+        public string SmallestFromLeaf(TreeNode root)
+        {
 
+        }
     }
 
 
