@@ -33,17 +33,17 @@ public class TreeNode
         this.left = left;
         this.right = right;
     }
-     
-    public static TreeNode CreateTree(int[] values, int index = 0)
+
+    public static TreeNode CreateTree(int?[] values, int index = 0)
     {
-        if (index >= values.Length)
+        if (index >= values.Length || values[index] == null)
         {
             return null;
         }
-
-        TreeNode node = new TreeNode(values[index]);
+        TreeNode node = new TreeNode();
         node.left = CreateTree(values, 2 * index + 1);
         node.right = CreateTree(values, 2 * index + 2);
+        node.val = (int)values[index];
         return node;
     }
 }
