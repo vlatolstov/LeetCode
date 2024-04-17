@@ -18,7 +18,18 @@ class Program
     {
         public string SmallestFromLeaf(TreeNode root)
         {
+            Stack<int> vals = new();
+            vals.Push(root.val);
+            if (root.left == null && root.right == null) return FromValsToString(vals);
 
+            int depth = 0;
+        }
+
+        string FromValsToString(Stack<int> vals)
+        {
+            StringBuilder sb = new();
+            while (vals.Count > 0) sb.Append((char)(vals.Pop() + 97));
+            return sb.ToString();
         }
     }
 
