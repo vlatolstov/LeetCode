@@ -9,27 +9,41 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-
-
-
+        var tree = TreeNode.CreateTree(new int[] { 0, 1, 2, 3, 4, 3, 4 });
+        Console.WriteLine(sol.SmallestFromLeaf(tree));
     }
 
     public class Solution
     {
+        string smallestString = null;
         public string SmallestFromLeaf(TreeNode root)
         {
-            Stack<int> vals = new();
-            vals.Push(root.val);
-            if (root.left == null && root.right == null) return FromValsToString(vals);
-
-            int depth = 0;
+            DFS(root);
+            return smallestString;
         }
 
-        string FromValsToString(Stack<int> vals)
+        void DFS(TreeNode node, string current = "")
         {
-            StringBuilder sb = new();
-            while (vals.Count > 0) sb.Append((char)(vals.Pop() + 97));
-            return sb.ToString();
+            if (node == null) return;
+
+            char currentChar = (char)(node.val + 97);
+            current = currentChar + current;
+
+            if (node.left == null || node.right == null)
+            {
+                SmallestCheck(current);
+            }
+
+            DFS(node.left, current);
+            DFS(node.right, current);
+        }
+
+        void SmallestCheck(string current)
+        {
+            if (smallestString == null || string.Compare(current, smallestString) < 0)
+            {
+                smallestString = current;
+            }
         }
     }
 
