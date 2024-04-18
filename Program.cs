@@ -29,48 +29,19 @@ class Program
             {
                 for (int j = 0; j < grid[i].Length; j++)
                 {
-                    if (grid[i][j] == 1) per = DFS(grid, i, j);
+                    if (grid[i][j] == 1)
+                    {
+                        per += 4;
+                        if (i > 0 && grid[i - 1][j] == 1) per -= 2;
+                        if (j > 0 && grid[i][j - 1] == 1) per -= 2;
+                    }
                 }
-                if (per > 0) break;
-            }
-            return per;
-        }
-
-        int DFS(int[][] grid, int i, int j)
-        {
-            int per = 4;
-            grid[i][j] = 2;
-
-            //up
-            if (i > 0 && grid[i - 1][j] == 1)
-            {
-                per -= 2;
-                per += DFS(grid, i - 1, j);
-            }
-
-            //right
-            if (j < grid[i].Length - 1 && grid[i][j + 1] == 1)
-            {
-                per -= 2;
-                per += DFS(grid, i, j + 1);
-            }
-
-            //down
-            if (i < grid.Length - 1 && grid[i + 1][j] == 1)
-            {
-                per -= 2;
-                per += DFS(grid, i + 1, j);
-            }
-
-            //left
-            if (j > 0 && grid[i][j - 1] == 1)
-            {
-                per -= 2;
-                per += DFS(grid, i, j - 1);
             }
             return per;
         }
     }
+
+    
 
 
 }
