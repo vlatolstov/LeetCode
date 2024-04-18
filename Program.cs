@@ -9,16 +9,68 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-
-
+        var grid = new int[][]
+        {
+            new int[]{ 0, 1, 0, 0 },
+            new int[]{ 1, 1, 1, 0 },
+            new int[]{ 0, 1, 0, 0 },
+            new int[]{ 1, 1, 0, 0 }
+        };
+        Console.WriteLine(sol.IslandPerimeter(grid));
 
     }
 
     public class Solution
     {
+        public int IslandPerimeter(int[][] grid)
+        {
+            int per = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    if (grid[i][j] == 1) per = DFS(grid, i, j);
+                }
+                if (per > 0) break;
+            }
+            return per;
+        }
 
+        int DFS(int[][] grid, int i, int j)
+        {
+            int per = 4;
+            grid[i][j] = 2;
+
+            //up
+            if (i > 0 && grid[i - 1][j] == 1)
+            {
+                per -= 2;
+                per += DFS(grid, i - 1, j);
+            }
+
+            //right
+            if (j < grid[i].Length - 1 && grid[i][j + 1] == 1)
+            {
+                per -= 2;
+                per += DFS(grid, i, j + 1);
+            }
+
+            //down
+            if (i < grid.Length - 1 && grid[i + 1][j] == 1)
+            {
+                per -= 2;
+                per += DFS(grid, i + 1, j);
+            }
+
+            //left
+            if (j > 0 && grid[i][j - 1] == 1)
+            {
+                per -= 2;
+                per += DFS(grid, i, j - 1);
+            }
+            return per;
+        }
     }
-
 
 
 }
