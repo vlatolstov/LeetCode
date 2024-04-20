@@ -66,35 +66,29 @@ class Program
                 {
                     if (land[i][j] == 1)
                     {
-                        var corners = new List<int> { i, j };
-                        DFS(land, i, j, corners);
-                        res.Add(corners.ToArray());
+                        res.Add(FindCorners(land, i, j));
                     }
                 }
             }
             return res.ToArray();
         }
 
-        void DFS(int[][] land, int i, int j, List<int> corners)
+        int[] FindCorners(int[][] land, int x, int y)
         {
-            if (i >= land.Length || j >= land[i].Length || land[i][j] != 1) return;
+            int dx = x;
+            int dy = y;
 
-            land[i][j] = 2;
+            while (dx < land.Length - 1 && land[dx + 1][dy] == 1) dx++;
+            while (dy < land[dx].Length - 1 && land[dx][dy + 1] == 1) dy++;
 
-            if (((i + 1 < land.Length 
-                && land[i + 1][j] != 1)
-                || i == land.Length -1)
-                && ((j + 1 < land[i].Length 
-                && land[i][j + 1] != 1)
-                || j == land[i].Length -1) 
-                && corners.Count != 4)
+            for (int i = x; i <= dx; i++)
             {
-                corners.Add(i);
-                corners.Add(j);
+                for (int j = y; j <= dy; j++)
+                {
+                    land[i][j] = 0;
+                }
             }
-
-            DFS(land, i, j + 1, corners);
-            DFS(land, i + 1, j, corners);
+            return new int[] { x, y, dx, dy };
         }
     }
 }
