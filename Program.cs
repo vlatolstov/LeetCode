@@ -9,52 +9,94 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-
-
+        var case1 = new int[][]
+        {
+            new int[] {1, 0, 0},
+            new int[] {0, 1, 1},
+            new int[] {0, 1, 1}
+        };
+        var ans1 = sol.FindFarmland(case1);
+        foreach (var place in ans1)
+        {
+            foreach (var coord in place)
+            {
+                Console.Write(coord + " ");
+            }
+            Console.WriteLine();
+        }
+        var case2 = new int[][]
+        {
+            new int[] {1, 1},
+            new int[] {1, 1}
+        };
+        var ans2 = sol.FindFarmland(case2);
+        foreach (var place in ans2)
+        {
+            foreach (var coord in place)
+            {
+                Console.Write(coord + " ");
+            }
+            Console.WriteLine();
+        }
+        var case3 = new int[][]
+        {
+            new int[] { 0 }
+        };
+        var ans3 = sol.FindFarmland(case3);
+        foreach (var place in ans3)
+        {
+            foreach (var coord in place)
+            {
+                Console.Write(coord + " ");
+            }
+            Console.WriteLine();
+        }
 
     }
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public int[][] FindFarmland(int[][] land)
         {
-            return null;
+            List<int[]> res = new();
+
+            for (int i = 0; i < land.Length; i++)
+            {
+                for (int j = 0; j < land[i].Length; j++)
+                {
+                    if (land[i][j] == 1)
+                    {
+                        var corners = new List<int> { i, j };
+                        DFS(land, i, j, corners);
+                        res.Add(corners.ToArray());
+                    }
+                }
+            }
+            return res.ToArray();
         }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
+
+        void DFS(int[][] land, int i, int j, List<int> corners)
+        {
+            if (i >= land.Length || j >= land[i].Length || land[i][j] != 1) return;
+
+            land[i][j] = 2;
+
+            if (((i + 1 < land.Length 
+                && land[i + 1][j] != 1)
+                || i == land.Length -1)
+                && ((j + 1 < land[i].Length 
+                && land[i][j + 1] != 1)
+                || j == land[i].Length -1) 
+                && corners.Count != 4)
+            {
+                corners.Add(i);
+                corners.Add(j);
+            }
+
+            DFS(land, i, j + 1, corners);
+            DFS(land, i + 1, j, corners);
+        }
     }
 }
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
-    }
-}
+
 
