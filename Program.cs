@@ -10,51 +10,48 @@ class Program
     {
         var sol = new Solution();
 
-
-
     }
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public int OpenLock(string[] deadends, string target)
         {
-            return null;
-        }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
-    }
-}
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
-    }
-}
+            HashSet<string> restrictions = new(deadends);
+            HashSet<string> visited = new();
+            Queue<string> queue = new();
+            int move = 0;
 
+            queue.Enqueue("0000");
+            visited.Add("0000");
+
+            while (queue.Count > 0)
+            {
+                int size = queue.Count;
+
+                for (int i = 0; i < size; i++)
+                {
+                    string curr = queue.Dequeue();
+                    if (restrictions.Contains(curr)) continue;
+                    if (curr == target) return move;
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        for (int k = -1; k <= 1; k += 2)
+                        {
+                            char[] currArr = curr.ToCharArray();
+                            int digit = (currArr[j] - '0' + k + 10) % 10;
+                            currArr[j] = (char)(digit + '0');
+                            string next = new string(currArr);
+                            if (!restrictions.Contains(next) && !visited.Contains(next))
+                            {
+                                queue.Enqueue(next);
+                                visited.Add(next);
+                            }
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+    }
+}
