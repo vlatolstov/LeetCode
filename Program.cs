@@ -16,38 +16,49 @@ class Program
     {
         public int OpenLock(string[] deadends, string target)
         {
-            HashSet<string> restrictions = new(deadends);
-            HashSet<string> visited = new();
-            Queue<string> queue = new();
+            int t = int.Parse(target);
             int move = 0;
-
-            queue.Enqueue("0000");
-            visited.Add("0000");
-
-            while (queue.Count > 0)
+            bool[] restr = new bool[10000];
+            foreach (var end in deadends)
             {
-                int size = queue.Count;
+                restr[int.Parse(end)] = true;
+            }
+
+            Queue<int> q = new();
+            if (!restr[0])
+            {
+                q.Enqueue(0);
+                restr[0] = true;
+            }
+
+            while(q.Count > 0)
+            {
+                int size = q.Count;
 
                 for (int i = 0; i < size; i++)
                 {
-                    string curr = queue.Dequeue();
-                    if (restrictions.Contains(curr)) continue;
-                    if (curr == target) return move;
+                    int scale = 1;
+                    int cur = q.Dequeue();
+                    if (cur == t) return move;
 
                     for (int j = 0; j < 4; j++)
                     {
-                        for (int k = -1; k <= 1; k += 2)
+                        int digit = (cur % (scale * 10)) / scale;
+                        int dec = cur + (digit == 0 ? 9 : -1) * scale;
+                        int inc = cur + (digit == 9 ? -9 : 1) * scale;
+
+                        if (!restr[dec])
                         {
-                            char[] currArr = curr.ToCharArray();
-                            int digit = (currArr[j] - '0' + k + 10) % 10;
-                            currArr[j] = (char)(digit + '0');
-                            string next = new string(currArr);
-                            if (!restrictions.Contains(next) && !visited.Contains(next))
-                            {
-                                queue.Enqueue(next);
-                                visited.Add(next);
-                            }
+                            q.Enqueue(dec);
+                            restr[dec] = true;
                         }
+
+                        if (!restr[inc])
+                        {
+                            q.Enqueue(inc);
+                            restr[inc] = true;
+                        }
+                        scale *= 10;
                     }
                 }
                 move++;
