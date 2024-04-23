@@ -10,51 +10,104 @@ class Program
     {
         var sol = new Solution();
 
+        var edges = new int[][]
+        {
+            new int[] { 1, 0 },
+            new int[] { 1, 2 },
+            new int[] { 1, 3 }
+        };
 
+        foreach (int i in sol.FindMinHeightTrees(4, edges))
+        {
+            Console.Write(i + " ");
+        }
 
     }
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public IList<int> FindMinHeightTrees(int n, int[][] edges)
         {
-            return null;
+            List<Path> paths = new();
+            Dictionary<int, List<int>> graph = new();
+
+            for (int i = 0; i < n; i++)
+            {
+                graph.Add(i, new List<int>());
+            }
+
+            foreach (var edge in edges)
+            {
+                graph[edge[0]].Add(edge[1]);
+                graph[edge[1]].Add(edge[0]);
+            }
+
+            foreach (var way in graph)
+            {
+                Queue<Path> variations = new();
+                List<Path> all = new();
+                var path = new Path(way.Key, way.Key);
+                //int maxHeight = 0;
+
+                variations.Enqueue(path);
+                path.visited.Add(way.Key);
+
+                while (variations.Count > 0)
+                {
+                    int size = variations.Count;
+                    for (int k = 0; k < size; k++)
+                    {
+                        var cur = variations.Dequeue();
+                        //maxHeight = Math.Max(cur.height, maxHeight);
+                        for (int u = 0; u < graph[cur.position].Count; u++)
+                        {
+                            if (!cur.visited.Contains(graph[cur.position][u]))
+                            {
+                                cur.visited.Add(u);
+                                cur.height++;
+                                cur.position = u;
+                                variations.Enqueue(new Path(cur));
+                            }
+                        }
+                        if (cur.visited.Count == graph[cur.position].Count)
+                        {
+                            all.Add(cur);
+                        }
+                    }
+                }
+                Path max = null;
+                for (int y = 0; y < all.Count; y++)
+                {
+                    if (max == null) max = all[y];
+                    else max = max.height > all[y].height ? max : all[y];
+                }
+                if (max != null) paths.Add(max);
+            }
+
+            int min = paths.Select(p => p.height).Min();
+            return paths.Where(p => p.height == min).Select(p => p.root).ToList();
         }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
-    }
-}
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
+
+        public class Path
+        {
+            public int root;
+            public int height;
+            public int position;
+            public HashSet<int> visited = new();
+
+            public Path(int r, int p)
+            {
+                root = r;
+                position = p;
+            }
+            public Path(Path source)
+            {
+                root = source.root;
+                height = source.height;
+                position = source.position;
+                visited = new HashSet<int>(source.visited);
+            }
+        }
     }
 }
 
