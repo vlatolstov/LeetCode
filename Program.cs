@@ -21,6 +21,19 @@ class Program
         {
             Console.Write(i + " ");
         }
+        var edges2 = new int[][]
+        {
+            new int[] { 3, 0 },
+            new int[] { 3, 1 },
+            new int[] { 3, 2 },
+            new int[] { 3, 4 },
+            new int[] { 5, 4 }
+        };
+
+        foreach (int i in sol.FindMinHeightTrees(6, edges2))
+        {
+            Console.Write(i + " ");
+        }
 
     }
 
@@ -28,7 +41,7 @@ class Program
     {
         public IList<int> FindMinHeightTrees(int n, int[][] edges)
         {
-            List<Path> paths = new();
+            
             Dictionary<int, List<int>> graph = new();
 
             for (int i = 0; i < n; i++)
@@ -42,69 +55,30 @@ class Program
                 graph[edge[1]].Add(edge[0]);
             }
 
-            foreach (var way in graph)
+            while (graph.Count > 2)
             {
-                Queue<Path> variations = new();
-                List<Path> all = new();
-                var path = new Path(way.Key, 0, way.Key);
+                List<int> toRemove = new();
 
-                variations.Enqueue(path);
-                path.visited.Add(way.Key);
-
-                while (variations.Count > 0)
+                foreach (var node in graph)
                 {
-                    int size = variations.Count;
-                    for (int k = 0; k < size; k++)
+                    if (node.Value.Count == 1)
                     {
-                        var cur = variations.Dequeue();
-
-                        bool isDeadEnd = true;
-                        for (int u = 0; u < graph[cur.position].Count; u++)
-                        {
-                            if (!cur.visited.Contains(graph[cur.position][u]))
-                            {
-                                isDeadEnd = false;
-                                cur.visited.Add(graph[cur.position][u]);
-                                variations.Enqueue(new Path(cur.root, cur.height + 1, graph[cur.position][u], cur.visited));
-                            }
-                        }
-                        if (isDeadEnd) all.Add(cur);
+                        toRemove.Add(node.Key);
+                        graph.Remove(node.Key);
                     }
                 }
-                Path max = null;
-                for (int y = 0; y < all.Count; y++)
+                if (toRemove.Count > 0)
                 {
-                    if (max == null) max = all[y];
-                    else max = max.height > all[y].height ? max : all[y];
+                    foreach(var node in graph)
+                    {
+                        foreach (var connection in toRemove)
+                        {
+                            node.Value.Remove(connection);
+                        }
+                    }
                 }
-                if (max != null) paths.Add(max);
             }
-
-            int min = paths.Select(p => p.height).Min();
-            return paths.Where(p => p.height == min).Select(p => p.root).ToList();
-        }
-
-        public class Path
-        {
-            public int root;
-            public int height;
-            public int position;
-            public HashSet<int> visited = new();
-
-            public Path(int r, int h, int p)
-            {
-                root = r;
-                height = h;
-                position = p;
-            }
-
-            public Path(int r, int h, int p, HashSet<int> vis)
-            {
-                root = r;
-                height = h;
-                position = p;
-                visited = new HashSet<int>(vis);
-            }
+            return graph.Select(n => n.Key).ToList();
         }
     }
 }
