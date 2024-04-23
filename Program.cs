@@ -46,8 +46,7 @@ class Program
             {
                 Queue<Path> variations = new();
                 List<Path> all = new();
-                var path = new Path(way.Key, way.Key);
-                //int maxHeight = 0;
+                var path = new Path(way.Key, 0, way.Key);
 
                 variations.Enqueue(path);
                 path.visited.Add(way.Key);
@@ -58,21 +57,18 @@ class Program
                     for (int k = 0; k < size; k++)
                     {
                         var cur = variations.Dequeue();
-                        //maxHeight = Math.Max(cur.height, maxHeight);
+
+                        bool isDeadEnd = true;
                         for (int u = 0; u < graph[cur.position].Count; u++)
                         {
                             if (!cur.visited.Contains(graph[cur.position][u]))
                             {
-                                cur.visited.Add(u);
-                                cur.height++;
-                                cur.position = u;
-                                variations.Enqueue(new Path(cur));
+                                isDeadEnd = false;
+                                cur.visited.Add(graph[cur.position][u]);
+                                variations.Enqueue(new Path(cur.root, cur.height + 1, graph[cur.position][u], cur.visited));
                             }
                         }
-                        if (cur.visited.Count == graph[cur.position].Count)
-                        {
-                            all.Add(cur);
-                        }
+                        if (isDeadEnd) all.Add(cur);
                     }
                 }
                 Path max = null;
@@ -95,17 +91,19 @@ class Program
             public int position;
             public HashSet<int> visited = new();
 
-            public Path(int r, int p)
+            public Path(int r, int h, int p)
             {
                 root = r;
+                height = h;
                 position = p;
             }
-            public Path(Path source)
+
+            public Path(int r, int h, int p, HashSet<int> vis)
             {
-                root = source.root;
-                height = source.height;
-                position = source.position;
-                visited = new HashSet<int>(source.visited);
+                root = r;
+                height = h;
+                position = p;
+                visited = new HashSet<int>(vis);
             }
         }
     }
