@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
@@ -9,7 +10,8 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-
+        var sw = new Stopwatch();
+        sw.Start();
         var edges = new int[][]
         {
             new int[] { 1, 0 },
@@ -34,7 +36,8 @@ class Program
         {
             Console.Write(i + " ");
         }
-
+        Console.WriteLine(sw.ElapsedMilliseconds);
+        sw.Stop();
     }
 
     public class Solution
@@ -55,28 +58,25 @@ class Program
                 graph[edge[1]].Add(edge[0]);
             }
 
+            Queue<int> q = new();
+
             while (graph.Count > 2)
             {
-                List<int> toRemove = new();
-
                 foreach (var node in graph)
                 {
                     if (node.Value.Count == 1)
                     {
-                        toRemove.Add(node.Key);
-                        graph.Remove(node.Key);
+                        q.Enqueue(node.Key);
                     }
                 }
-                if (toRemove.Count > 0)
+
+                while (q.Count > 0)
                 {
-                    foreach(var node in graph)
-                    {
-                        foreach (var connection in toRemove)
-                        {
-                            node.Value.Remove(connection);
-                        }
-                    }
+                    var key = q.Dequeue();
+                    graph[graph[key][0]].Remove(key);
+                    graph.Remove(key);
                 }
+                
             }
             return graph.Select(n => n.Key).ToList();
         }
