@@ -10,51 +10,24 @@ class Program
     {
         var sol = new Solution();
 
-
-
+        Console.WriteLine(sol.Tribonacci(4));
+        Console.WriteLine(sol.Tribonacci(25));
     }
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        //The Tribonacci sequence Tn is defined as follows: 
+        //T0 = 0, T1 = 1, T2 = 1, and Tn+3 = Tn + Tn+1 + Tn+2 for n >= 0. 
+        public int Tribonacci(int n)
         {
-            return null;
-        }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
-    }
-}
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
-    }
-}
+            List<int> list = new() { 0, 1, 1 };
 
+            for (int i = 2; i <= n; i++)
+            {
+                list.Add(list[i] + list[i - 1] + list[i - 2]);
+            }
+
+            return list[n];
+        }
+    }
+}
