@@ -10,51 +10,54 @@ class Program
     {
         var sol = new Solution();
 
-
-
+        Console.WriteLine(sol.LongestIdealString("acfgbd", 2));
+        Console.WriteLine(sol.LongestIdealString("abcd", 3));
     }
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public int LongestIdealString(string s, int k)
         {
-            return null;
+            if (s.Length == 1) return 1;
+            HashSet<string> visited = new();
+
+            Queue<(int, string)> q = new(); //int for current position in 's', string for current string
+
+            
+
+            while (q.Count > 0)
+            {
+                int size = q.Count;
+                for (int i = 0; i < size; i++)
+                {
+                    var cur = q.Dequeue();
+                    var curPos = cur.Item1;
+                    var curString = cur.Item2;
+                    if (curPos < s.Length - 1)
+                    {
+                        var nextPos = curPos + 1;
+                        var nextChar = s[nextPos];
+                        var difference = Math.Abs(curString[^1] - nextChar);
+                        if (difference <= k)
+                        {
+                            var newString = new string(curString + nextChar);
+                            if (!visited.Contains(newString))
+                            {
+                                visited.Add(newString);
+                                q.Enqueue((nextPos, newString));
+                            }
+                        }
+                    }
+                }
+            }
+
+            int longest = 0;
+            foreach (var seq in visited)
+            {
+                longest = longest > seq.Length ? longest : seq.Length;
+            }
+            return longest;
         }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
-    }
-}
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
     }
 }
 
