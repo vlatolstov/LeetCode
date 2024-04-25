@@ -22,53 +22,30 @@ class Program
     {
         public int LongestIdealString(string s, int k)
         {
-            if (s.Length == 1) return 1;
+            int[] all = new int[27];
 
-            int longest = 0;
-
-            List<Seq> list = new();
-
-            for (int i = 0; i < s.Length; i++)
+            for (int i = s.Length - 1; i >= 0; i--)
             {
-                foreach (var cur in list)
+                char c = s[i];
+                int index = c - 'a';
+
+                int max = int.MinValue;
+
+                int left = Math.Max(index - k, 0);
+                int right = Math.Min(index + k, 26);
+
+                for (int j = left; j <= right; j++)
                 {
-                    if (Math.Abs(cur.Ch - s[i]) <= k)
-                    {
-                        cur.Change(s[i]);
-                        longest = longest > cur.Lenght ? longest : cur.Lenght;
-                    }
+                    max = Math.Max(max, all[j]);
                 }
-                if (s.Length - 1 - i > longest) list.Add(new Seq(s[i]));
+
+                all[index] = max + 1;
             }
 
-            return longest;
-        }
+            int res = int.MinValue;
+            foreach (int i in all) res = Math.Max(i, res);
 
-        public class Seq
-        {
-            public char Ch { get; private set; }
-            public int Lenght { get; private set; }
-
-            /// <summary>
-            /// Creates a new sequence of chars. 
-            /// </summary>
-            /// <param name="c">current char.</param>
-            /// <param name="l">total lenght.</param>
-            public Seq(char c, int l = 1)
-            {
-                Ch = c;
-                Lenght = l;
-            }
-
-            /// <summary>
-            /// sets new last char and icrease lenght by 1.
-            /// </summary>
-            /// <param name="c">change last char.</param>
-            public void Change(char c)
-            {
-                Ch = c;
-                Lenght++;
-            }
+            return res;
         }
     }
 }
