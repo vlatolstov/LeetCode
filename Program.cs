@@ -22,30 +22,29 @@ class Program
     {
         public int LongestIdealString(string s, int k)
         {
-            int[] all = new int[27];
+            var alphabet = new int[27];
 
-            for (int i = s.Length - 1; i >= 0; i--)
+            for (int i = s.Length - 1; i >=0; i--)
             {
                 char c = s[i];
                 int index = c - 'a';
 
-                int max = int.MinValue;
+                int left = Math.Max(0, index - k);
+                int right = Math.Min(26, index + k);
 
-                int left = Math.Max(index - k, 0);
-                int right = Math.Min(index + k, 26);
-
+                int longest = int.MinValue;
                 for (int j = left; j <= right; j++)
                 {
-                    max = Math.Max(max, all[j]);
+                    longest = Math.Max(longest, alphabet[j]);
                 }
 
-                all[index] = max + 1;
+                alphabet[index] = longest + 1;
             }
 
-            int res = int.MinValue;
-            foreach (int i in all) res = Math.Max(i, res);
+            int max = int.MinValue;
+            foreach (int i in alphabet) max = Math.Max(max, i);
 
-            return res;
+            return max;
         }
     }
 }
