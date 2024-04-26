@@ -9,16 +9,24 @@ class Program
     static void Main(string[] args)
     {
         var sol = new Solution();
-        Console.WriteLine(sol.MinFallingPathSum(new int[][] 
+        Console.WriteLine(sol.MinFallingPathSum(new int[][]
         { new int[] { 1,2,3},
         new int[] { 4,5,6},
         new int[] { 7,8,9},
         }));
-        Console.WriteLine(sol.MinFallingPathSum(new int[][] 
+        Console.WriteLine(sol.MinFallingPathSum(new int[][]
         { new int[] { 7}
         }));
-
-        int[][] matrix = new int[][] {
+        int[][] matrix = new int[][]
+{
+    new int[] { -73, 61, 43, -48, -36 },
+    new int[] { 3, 30, 27, 57, 10 },
+    new int[] { 96, -76, 84, 59, -15 },
+    new int[] { 5, -49, 76, 31, -7 },
+    new int[] { 97, 91, 61, -46, 67 }
+};
+        Console.WriteLine(sol.MinFallingPathSum(matrix));
+        int[][] matrix2 = new int[][] {
     new int[] { -2, -18, 31, -10, -71, 82, 47, 56, -14, 42 },
     new int[] { -95, 3, 65, -7, 64, 75, -51, 97, -66, -28 },
     new int[] { 36, 3, -62, 38, 15, 51, -58, -90, -23, -63 },
@@ -30,7 +38,7 @@ class Program
     new int[] { -87, 82, 2, 86, -88, -58, -91, -79, 44, -9 },
     new int[] { -96, -14, -52, -8, 12, 38, 84, 77, -51, 52 }
 };
-        Console.WriteLine(sol.MinFallingPathSum(matrix));
+        Console.WriteLine(sol.MinFallingPathSum(matrix2));
 
     }
 
@@ -44,26 +52,46 @@ class Program
 
             int minSum = int.MaxValue;
 
+            Dictionary<int, Dictionary<int, int>> graph = new();
+
             for (int i = 0; i < length; i++)
             {
-                DFS(0, i, 0);
+                graph.Add(i, new Dictionary<int, int>());
+                for (int j = 0; j < length; j++)
+                {
+                    graph[i].Add(j, grid[i][j]);
+                }
+            }
+
+            foreach (var raw in graph)
+            {
+                var cur = raw.Value.OrderBy(r => r.Value).FirstOrDefault();
+                SumOfOtherRaws(raw.Key, cur.Key, cur.Value);
             }
 
             return minSum;
 
-            void DFS(int curRaw, int curCol, int curSum)
+
+            void SumOfOtherRaws(int curRaw, int curCol, int curSum)
             {
-                //if (curSum > minSum) return;
-                if (curRaw >= length)
+                int skip = -1;
+                for (int j = 0; j < length; j++)
                 {
-                    minSum = minSum < curSum ? minSum : curSum;
-                    return;
+                    if (j == curRaw) continue;
+                    if (j + 1 == curRaw || j - 1 == curRaw)
+                    {
+                        var raw = graph[j].Where(r => r.Key != curCol).OrderBy(r => r.Value).FirstOrDefault();
+                        curSum += raw.Value;
+                        skip = raw.Key;
+                    }
+                    else
+                    {
+                        var raw = graph[j].Where(r => r.Key != skip).OrderBy(r => r.Value).FirstOrDefault();
+                        curSum += raw.Value;
+                        skip = raw.Key;
+                    }
                 }
-                curSum += grid[curRaw][curCol];
-                for (int i = 0; i < length; i++)
-                {
-                    if (i != curCol) DFS(curRaw + 1, i, curSum);
-                }
+                minSum = Math.Min(curSum, minSum);
             }
         }
     }
