@@ -66,8 +66,6 @@ class Program
             if (length == 0) return 0;
             if (length == 1) return grid[0].Min();
 
-            int minSum = int.MaxValue;
-
             Dictionary<int, Dictionary<int, int>> graph = new();
 
             for (int i = 0; i < length; i++)
@@ -79,43 +77,15 @@ class Program
                 }
             }
 
-            foreach (var raw in graph)
+            for (int i = 1; i < length; i++)
             {
-                var cur = raw.Value.OrderBy(r => r.Value).FirstOrDefault();
-                SumOfOtherRaws(raw.Key, cur.Key, cur.Value);
+                for (int j = 0; j < length; j++)
+                {
+                    graph[i][j] += graph[i - 1].Where(c => c.Key != j).OrderBy(c => c.Value).FirstOrDefault().Value;
+                }
             }
 
-            return minSum;
-
-
-            void SumOfOtherRaws(int curRaw, int curCol, int curSum)
-            {
-                int skip = curCol;
-                for (int j = curRaw; j < length; j++)
-                {
-                    if (j == curRaw) continue;
-                    else
-                    {
-                        var raw = graph[j].Where(r => r.Key != skip).OrderBy(r => r.Value).FirstOrDefault();
-                        curSum += raw.Value;
-                        skip = raw.Key;
-                    }
-                }
-
-                skip = curCol;
-                for (int j = curRaw; j >= 0; j--)
-                {
-                    if (j == curRaw) continue;
-                    else
-                    {
-                        var raw = graph[j].Where(r => r.Key != skip).OrderBy(r => r.Value).FirstOrDefault();
-                        curSum += raw.Value;
-                        skip = raw.Key;
-                    }
-                }
-
-                minSum = Math.Min(curSum, minSum);
-            }
+            return graph[length-1].OrderBy(c => c.Value).FirstOrDefault().Value;
         }
     }
 }
