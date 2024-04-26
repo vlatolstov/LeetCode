@@ -75,7 +75,7 @@ class Program
             void SumOfOtherRaws(int curRaw, int curCol, int curSum)
             {
                 int skip = -1;
-                for (int j = 0; j < length; j++)
+                for (int j = curRaw; j < length; j++)
                 {
                     if (j == curRaw) continue;
                     if (j + 1 == curRaw || j - 1 == curRaw)
@@ -91,6 +91,17 @@ class Program
                         skip = raw.Key;
                     }
                 }
+
+                curRaw--;
+                skip = curCol;
+                while(curRaw >= 0)
+                {
+                    var raw = graph[curRaw].Where(r => r.Key != skip).OrderBy(r => r.Value).FirstOrDefault();
+                    curSum += raw.Value;
+                    skip = raw.Key;
+                    curRaw--;
+                }
+
                 minSum = Math.Min(curSum, minSum);
             }
         }
