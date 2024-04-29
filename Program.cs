@@ -10,51 +10,50 @@ class Program
     {
         var sol = new Solution();
 
+        var case1 = new int[] 
+        { 2, 1, 3, 4 };
+        Console.WriteLine(sol.MinOperations(case1, 1));
+
+        var case2 = new int[] 
+        { 2, 0, 2, 0 };
+        Console.WriteLine(sol.MinOperations(case2, 0));
 
 
     }
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public int MinOperations(int[] nums, int k)
         {
-            return null;
-        }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
-    }
-}
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
-    }
-}
 
+            int XOR = nums[0];
+            for (int i = 1; i < nums.Length; i++)
+            {
+                XOR ^= nums[i];
+            }
+
+            string difference = Convert(XOR ^ k);
+
+            int result = 0;
+            for (int i = 0; i < difference.Length; i++)
+            {
+                if (difference[i] == '1') result++;
+            }
+
+            return result;
+
+            static string Convert(int x)
+            {
+                if (x == 0) return new string("0");
+                List<char> l = new();
+                while (x > 0)
+                {
+                    l.Add((char)((x % 2) + 48));
+                    x /= 2;
+                }
+                l.Reverse();
+                return String.Concat(l);
+            }
+        }
+    }
+}
