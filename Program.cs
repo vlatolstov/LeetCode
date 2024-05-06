@@ -16,36 +16,51 @@ class Program
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public ListNode RemoveNodes(ListNode head)
         {
-            return null;
+            var nodes = new List<ListNode>();
+
+            while (head != null)
+            {
+                nodes.Add(head);
+                head = head.next;
+            }
+
+            var willStay = new bool[nodes.Count];
+            int max = 0;
+            for (int i = nodes.Count - 1; i >=0; i--)
+            {
+                if (nodes[i].val >= max)
+                {
+                    max = Math.Max(nodes[i].val, max);
+                    willStay[i] = true;
+                }
+            }
+
+            ListNode answer = null;
+            ListNode cur = null;
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (willStay[i])
+                {
+                    if (answer == null)
+                    {
+                        answer = nodes[i];
+                        cur = answer;
+                    }
+                    else
+                    {
+                        cur.next = nodes[i];
+                        cur = cur.next;
+                    }
+                }
+            }
+
+            return answer;
         }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
     }
+
 }
 public class ListNode
 {
