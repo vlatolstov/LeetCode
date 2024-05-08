@@ -18,43 +18,32 @@ class Program
     {
         public string[] FindRelativeRanks(int[] score)
         {
-            Dictionary<int, int> indexes = new();
+            List<(int, int)> adj = new();
+           
 
             for (int i = 0; i < score.Length; i++)
             {
-                indexes.Add(score[i], i);
+                adj.Add((score[i], i));
             }
 
-            HashSet<int> values = new(score);
-            string[] anwser = new string[score.Length];
-
+            var res = new string[score.Length];
             int place = 1;
-            while (values.Count > 0)
+
+            var order = adj.OrderByDescending(i => i.Item1);
+
+            foreach (var pair in order)
             {
-                var cur = values.Max();
-                int i = indexes[cur];
-
-                switch (place)
+                res[pair.Item2] = place switch
                 {
-                    case 1:
-                        anwser[i] = "Gold Medal";
-                        break;
-                    case 2:
-                        anwser[i] = "Silver Medal";
-                        break;
-                    case 3:
-                        anwser[i] = "Bronze Medal";
-                        break;
-                    default:
-                        anwser[i] = place.ToString();
-                        break;
-                }
-
+                    1 => "Gold Medal",
+                    2 => "Silver Medal",
+                    3 => "Bronze Medal",
+                    _ => place.ToString()
+                };
                 place++;
-                values.Remove(cur);
             }
 
-            return anwser;
+            return res;
         }
     }
 }
