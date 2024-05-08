@@ -16,45 +16,45 @@ class Program
 
     public class Solution
     {
-
-    }
-
-
-
-}
-public class TreeNode
-{
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-    {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-
-    public static TreeNode CreateTree(int?[] values, int index = 0)
-    {
-        if (index >= values.Length || values[index] == null)
+        public string[] FindRelativeRanks(int[] score)
         {
-            return null;
-        }
-        TreeNode node = new TreeNode();
-        node.left = CreateTree(values, 2 * index + 1);
-        node.right = CreateTree(values, 2 * index + 2);
-        node.val = (int)values[index];
-        return node;
-    }
-}
-public class ListNode
-{
-    public int val;
-    public ListNode next;
-    public ListNode(int val = 0, ListNode next = null)
-    {
-        this.val = val;
-        this.next = next;
-    }
-}
+            Dictionary<int, int> indexes = new();
 
+            for (int i = 0; i < score.Length; i++)
+            {
+                indexes.Add(score[i], i);
+            }
+
+            HashSet<int> values = new(score);
+            string[] anwser = new string[score.Length];
+
+            int place = 1;
+            while (values.Count > 0)
+            {
+                var cur = values.Max();
+                int i = indexes[cur];
+
+                switch (place)
+                {
+                    case 1:
+                        anwser[i] = "Gold Medal";
+                        break;
+                    case 2:
+                        anwser[i] = "Silver Medal";
+                        break;
+                    case 3:
+                        anwser[i] = "Bronze Medal";
+                        break;
+                    default:
+                        anwser[i] = place.ToString();
+                        break;
+                }
+
+                place++;
+                values.Remove(cur);
+            }
+
+            return anwser;
+        }
+    }
+}
